@@ -102,6 +102,12 @@
             </div>
           </div>
 
+          <!-- 所有分布マップ -->
+          <div class="map-section">
+            <p class="field-label">所有分布マップ</p>
+            <OwnershipMap :product-id="product.id" />
+          </div>
+
           <!-- 統計（読み取り専用） -->
           <div class="stats-row">
             <div class="stat">
@@ -134,6 +140,7 @@ import { userProfileStore } from '../../store/userProfile'
 import { productStore, type ProductImage } from '../../store/products'
 import { authState } from '../../lib/auth'
 import PhotoUpload from '../../components/PhotoUpload.vue'
+import OwnershipMap from '../../components/OwnershipMap.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -388,6 +395,8 @@ async function save() {
 }
 .field-input-sm:focus { border-color: var(--accent); }
 .field-input-sm[readonly] { background: var(--bg-surface); cursor: default; }
+
+.map-section { display: flex; flex-direction: column; gap: 6px; }
 
 .stats-row { display: flex; gap: 24px; padding: 12px 0; border-top: 1px solid var(--border-subtle); }
 .stat { display: flex; flex-direction: column; gap: 3px; }

@@ -38,7 +38,7 @@ const router = createRouter({
     {
       path: '/admin',
       component: () => import('../views/admin/AdminLayout.vue'),
-      meta: { requiresAuth: true, requiresViewer: true },
+      meta: { requiresAuth: true },
       children: [
         { path: '', redirect: '/admin/products' },
         {
