@@ -90,19 +90,17 @@
           <!-- アクション -->
           <div class="action-card">
             <template v-if="item.status === 'owned'">
-              <button class="release-btn" @click="showPicker = !showPicker">
-                手放す
-              </button>
-              <div v-if="showPicker" class="method-picker">
-                <p class="method-label">どのように手放しますか？</p>
-                <div class="method-grid">
-                  <button
-                    v-for="m in methods"
-                    :key="m.value"
-                    class="method-btn"
-                    @click="confirmArchive(m.value)"
-                  >{{ m.label }}</button>
-                </div>
+              <p class="action-label">手放し方を記録する</p>
+              <div class="method-grid">
+                <button
+                  v-for="m in methods"
+                  :key="m.value"
+                  class="method-btn"
+                  @click="confirmArchive(m.value)"
+                >
+                  <span class="method-name">{{ m.label }}</span>
+                  <span class="method-desc">{{ m.desc }}</span>
+                </button>
               </div>
             </template>
 
@@ -202,15 +200,14 @@ const displayCreator = computed(() =>
 )
 
 const imgFailed = ref(false)
-const showPicker = ref(false)
 const showPhotoUpload = ref(false)
 const showDeleteConfirm = ref(false)
 
-const methods: { value: NonNullable<ShelfItem['disposalMethod']>; label: string }[] = [
-  { value: 'resale',   label: '再販売' },
-  { value: 'gift',     label: '譲渡' },
-  { value: 'donation', label: '寄付' },
-  { value: 'disposal', label: '廃棄' },
+const methods: { value: NonNullable<ShelfItem['disposalMethod']>; label: string; desc: string }[] = [
+  { value: 'resale',   label: '再販売',   desc: '売る・フリマ・買取' },
+  { value: 'gift',     label: '譲渡',     desc: '知人・家族に渡す' },
+  { value: 'donation', label: '寄付',     desc: '団体・施設へ' },
+  { value: 'disposal', label: '廃棄',     desc: '捨てる・処分する' },
 ]
 
 function disposalLabel(method: ShelfItem['disposalMethod']) {
@@ -225,7 +222,6 @@ function onImgLoad(e: Event) {
 function confirmArchive(method: NonNullable<ShelfItem['disposalMethod']>) {
   if (!item.value) return
   store.archive(item.value.id, method)
-  showPicker.value = false
 }
 
 async function onPhotoDone(url: string) {
@@ -490,30 +486,12 @@ async function doDelete() {
   border: 1px solid var(--border-faint);
 }
 
-.release-btn {
-  width: 100%;
-  padding: 14px;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  letter-spacing: 0.04em;
-  transition: background 0.15s;
-}
-.release-btn:hover { background: var(--accent-hover); }
-
-.method-picker { margin-top: 16px; }
-
-.method-label {
+.action-label {
   font-size: 11px;
   color: var(--text-faint);
-  letter-spacing: 0.05em;
-  margin-bottom: 10px;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
+  margin-bottom: 10px;
 }
 
 .method-grid {
@@ -523,18 +501,33 @@ async function doDelete() {
 }
 
 .method-btn {
-  padding: 11px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 12px 14px;
   border: 1.5px solid var(--border);
-  border-radius: 7px;
+  border-radius: 8px;
   background: var(--bg-subtle);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-sub);
   cursor: pointer;
   font-family: inherit;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
 }
-.method-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+.method-btn:hover { border-color: var(--border-accent); background: var(--accent-bg-dim); }
+
+.method-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+
+.method-desc {
+  font-size: 10px;
+  color: var(--text-faint);
+  line-height: 1.3;
+}
 
 .unarchive-btn {
   width: 100%;
