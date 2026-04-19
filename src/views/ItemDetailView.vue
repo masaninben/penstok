@@ -111,35 +111,34 @@
             </template>
           </div>
 
-          <!-- メモ -->
-          <div class="memo-card">
-            <p class="section-label">メモ</p>
-            <textarea
-              class="memo-input"
-              placeholder="メモを追加…"
-              :value="item.notes ?? ''"
-              @input="store.updateNotes(item.id, ($event.target as HTMLTextAreaElement).value)"
-            />
+          <!-- 所有分布マップ（準備中） -->
+          <div class="map-card">
+            <div class="map-header">
+              <span class="map-title">所有分布マップ</span>
+              <span class="map-badge">準備中</span>
+            </div>
+            <div class="map-placeholder">
+              <div class="map-dots" aria-hidden="true">
+                <span v-for="i in 80" :key="i" class="map-dot" :style="{ opacity: Math.random() * 0.5 + 0.05 }" />
+              </div>
+              <div class="map-overlay-content">
+                <span class="map-icon">🗾</span>
+                <p class="map-coming-text">居住地を中心に所有者の分布を表示</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- 所有分布マップ（準備中） -->
-      <div class="map-card">
-        <div class="map-header">
-          <span class="map-title">所有分布マップ</span>
-          <span class="map-badge">準備中</span>
-        </div>
-        <div class="map-placeholder">
-          <div class="map-dots" aria-hidden="true">
-            <span v-for="i in 80" :key="i" class="map-dot" :style="{ opacity: Math.random() * 0.5 + 0.05 }" />
-          </div>
-          <div class="map-overlay-content">
-            <span class="map-icon">🗾</span>
-            <p class="map-coming-text">居住地を中心に所有者の分布を表示</p>
-            <p class="map-sub">市区町村単位でのヒートマップ・所有者数を可視化します</p>
-          </div>
-        </div>
+      <!-- メモ -->
+      <div class="memo-card">
+        <p class="section-label">メモ</p>
+        <textarea
+          class="memo-input"
+          placeholder="メモを追加…"
+          :value="item.notes ?? ''"
+          @input="store.updateNotes(item.id, ($event.target as HTMLTextAreaElement).value)"
+        />
       </div>
 
       <!-- 削除 -->
@@ -481,9 +480,10 @@ async function doDelete() {
 .action-card {
   background: var(--bg-card);
   border-radius: 10px;
-  padding: 20px;
+  padding: 18px 20px;
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-faint);
+  border-left: 3px solid var(--accent);
 }
 
 .action-label {
@@ -698,7 +698,7 @@ async function doDelete() {
 
 .map-placeholder {
   position: relative;
-  height: 160px;
+  height: 80px;
   background: var(--bg-surface);
   border-radius: 8px;
   overflow: hidden;
@@ -726,29 +726,23 @@ async function doDelete() {
 .map-overlay-content {
   position: relative;
   z-index: 1;
-  text-align: center;
-  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
 }
 
 .map-icon {
-  font-size: 28px;
-  display: block;
-  margin-bottom: 8px;
+  font-size: 18px;
+  margin-right: 8px;
   opacity: 0.4;
 }
 
 .map-coming-text {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-sub);
-  margin: 0 0 4px;
-}
-
-.map-sub {
-  font-size: 11px;
-  color: var(--text-faint);
   margin: 0;
-  line-height: 1.5;
 }
 
 .not-found {
