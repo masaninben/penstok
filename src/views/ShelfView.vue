@@ -289,7 +289,7 @@ void userProfileStore
 
 .shelf-grid {
   display: grid;
-  gap: 10px;
+  gap: 3px;
 }
 
 @media (max-width: 430px) {

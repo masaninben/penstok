@@ -58,8 +58,8 @@ function onImgLoad(e: Event) {
 <style scoped>
 .shelf-card {
   background: var(--bg-card);
-  border-radius: 6px;
-  padding: 8px;
+  border-radius: 4px;
+  padding: 3px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-shadow: var(--shadow-sm);
@@ -102,7 +102,7 @@ function onImgLoad(e: Event) {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px;
+  padding: 3px;
   box-sizing: border-box;
 }
 

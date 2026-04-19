@@ -270,7 +270,7 @@ onMounted(async () => {
 .state-msg { text-align: center; padding: 48px 0; font-size: 13px; color: var(--text-faint); }
 .state-empty { padding: 48px 0; text-align: center; font-size: 13px; color: var(--text-faint); }
 
-.cards-grid { display: grid; gap: 12px; }
+.cards-grid { display: grid; gap: 3px; }
 
 .product-card {
   background: var(--bg-card); border-radius: 10px; box-shadow: var(--shadow-sm);
