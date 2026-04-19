@@ -7,115 +7,141 @@
 
     <div v-if="item" class="detail-main">
 
-      <!-- 表紙 -->
-      <div class="cover-card">
-        <div class="cover-wrap" @click="showPhotoUpload = true">
-          <img
-            v-if="!imgFailed && displayImageUrl"
-            :src="displayImageUrl"
-            :alt="displayName"
-            class="cover-img"
-            @error="imgFailed = true"
-            @load="onImgLoad"
-          />
-          <span v-else class="cover-fallback">{{ displayName }}</span>
-          <div class="cover-camera-hint">📷</div>
-        </div>
-
-        <div v-if="showPhotoUpload" class="photo-panel">
-          <div class="photo-panel-header">
-            <span class="photo-panel-title">画像を変更</span>
-            <button class="photo-panel-close" @click="showPhotoUpload = false">✕</button>
-          </div>
-          <PhotoUpload
-            :upload-path="`users/${uid}/items/${item.id}`"
-            @done="onPhotoDone"
-            @cancel="showPhotoUpload = false"
-          />
-        </div>
-      </div>
-
-      <!-- 基本情報 -->
-      <div class="info-card">
-        <p class="title">{{ displayName }}</p>
-        <p class="creator">{{ displayCreator }}</p>
-
-        <div class="meta">
-          <div class="meta-row">
-            <span class="meta-label">追加日</span>
-            <span class="meta-value">{{ item.addedAt }}</span>
-          </div>
-          <div class="meta-row">
-            <span class="meta-label">ステータス</span>
-            <span class="meta-value" :class="item.status === 'owned' ? 'status-owned' : 'status-archived'">
-              {{ item.status === 'owned' ? '所有中' : '手放し済み' }}
-            </span>
-          </div>
-          <template v-if="item.status === 'archived'">
-            <div class="meta-row">
-              <span class="meta-label">手放した日</span>
-              <span class="meta-value">{{ item.archivedAt }}</span>
+      <div class="detail-cols">
+        <!-- 左カラム: 画像 + 基本情報 -->
+        <div class="col-left">
+          <!-- 表紙 -->
+          <div class="cover-card">
+            <div class="cover-wrap" @click="showPhotoUpload = true">
+              <img
+                v-if="!imgFailed && displayImageUrl"
+                :src="displayImageUrl"
+                :alt="displayName"
+                class="cover-img"
+                @error="imgFailed = true"
+                @load="onImgLoad"
+              />
+              <span v-else class="cover-fallback">{{ displayName }}</span>
+              <div class="cover-camera-hint">📷</div>
             </div>
-            <div class="meta-row">
-              <span class="meta-label">手放し方</span>
-              <span class="meta-value">{{ disposalLabel(item.disposalMethod) }}</span>
-            </div>
-          </template>
-        </div>
-      </div>
 
-      <!-- 手放しアシスト（仮） -->
-      <div class="assist-card">
-        <div class="assist-header">
-          <span class="assist-icon">🔄</span>
-          <span class="assist-title">手放しアシスト</span>
-          <span class="assist-badge">準備中</span>
-        </div>
-        <p class="assist-desc">
-          捨て方・売り方・譲り方を、この商品とあなたの居住地に合わせて案内します。
-        </p>
-        <div class="assist-chips">
-          <span class="assist-chip">自治体の廃棄方法</span>
-          <span class="assist-chip">再販価格相場</span>
-          <span class="assist-chip">寄付・リユース先</span>
-        </div>
-      </div>
-
-      <!-- アクション -->
-      <div class="action-card">
-        <template v-if="item.status === 'owned'">
-          <button class="release-btn" @click="showPicker = !showPicker">
-            手放す
-          </button>
-          <div v-if="showPicker" class="method-picker">
-            <p class="method-label">どのように手放しますか？</p>
-            <div class="method-grid">
-              <button
-                v-for="m in methods"
-                :key="m.value"
-                class="method-btn"
-                @click="confirmArchive(m.value)"
-              >{{ m.label }}</button>
+            <div v-if="showPhotoUpload" class="photo-panel">
+              <div class="photo-panel-header">
+                <span class="photo-panel-title">画像を変更</span>
+                <button class="photo-panel-close" @click="showPhotoUpload = false">✕</button>
+              </div>
+              <PhotoUpload
+                :upload-path="`users/${uid}/items/${item.id}`"
+                @done="onPhotoDone"
+                @cancel="showPhotoUpload = false"
+              />
             </div>
           </div>
-        </template>
 
-        <template v-else>
-          <button class="unarchive-btn" @click="store.unarchive(item.id)">
-            所有に戻す
-          </button>
-        </template>
+          <!-- 基本情報 -->
+          <div class="info-card">
+            <p class="title">{{ displayName }}</p>
+            <p class="creator">{{ displayCreator }}</p>
+
+            <div class="meta">
+              <div class="meta-row">
+                <span class="meta-label">追加日</span>
+                <span class="meta-value">{{ item.addedAt }}</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">ステータス</span>
+                <span class="meta-value" :class="item.status === 'owned' ? 'status-owned' : 'status-archived'">
+                  {{ item.status === 'owned' ? '所有中' : '手放し済み' }}
+                </span>
+              </div>
+              <template v-if="item.status === 'archived'">
+                <div class="meta-row">
+                  <span class="meta-label">手放した日</span>
+                  <span class="meta-value">{{ item.archivedAt }}</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-label">手放し方</span>
+                  <span class="meta-value">{{ disposalLabel(item.disposalMethod) }}</span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右カラム: アシスト + アクション + メモ -->
+        <div class="col-right">
+          <!-- 手放しアシスト（仮） -->
+          <div class="assist-card">
+            <div class="assist-header">
+              <span class="assist-icon">🔄</span>
+              <span class="assist-title">手放しアシスト</span>
+              <span class="assist-badge">準備中</span>
+            </div>
+            <p class="assist-desc">
+              捨て方・売り方・譲り方を、この商品とあなたの居住地に合わせて案内します。
+            </p>
+            <div class="assist-chips">
+              <span class="assist-chip">自治体の廃棄方法</span>
+              <span class="assist-chip">再販価格相場</span>
+              <span class="assist-chip">寄付・リユース先</span>
+            </div>
+          </div>
+
+          <!-- アクション -->
+          <div class="action-card">
+            <template v-if="item.status === 'owned'">
+              <button class="release-btn" @click="showPicker = !showPicker">
+                手放す
+              </button>
+              <div v-if="showPicker" class="method-picker">
+                <p class="method-label">どのように手放しますか？</p>
+                <div class="method-grid">
+                  <button
+                    v-for="m in methods"
+                    :key="m.value"
+                    class="method-btn"
+                    @click="confirmArchive(m.value)"
+                  >{{ m.label }}</button>
+                </div>
+              </div>
+            </template>
+
+            <template v-else>
+              <button class="unarchive-btn" @click="store.unarchive(item.id)">
+                所有に戻す
+              </button>
+            </template>
+          </div>
+
+          <!-- メモ -->
+          <div class="memo-card">
+            <p class="section-label">メモ</p>
+            <textarea
+              class="memo-input"
+              placeholder="メモを追加…"
+              :value="item.notes ?? ''"
+              @input="store.updateNotes(item.id, ($event.target as HTMLTextAreaElement).value)"
+            />
+          </div>
+        </div>
       </div>
 
-      <!-- メモ -->
-      <div class="memo-card">
-        <p class="section-label">メモ</p>
-        <textarea
-          class="memo-input"
-          placeholder="メモを追加…"
-          :value="item.notes ?? ''"
-          @input="store.updateNotes(item.id, ($event.target as HTMLTextAreaElement).value)"
-        />
+      <!-- 所有分布マップ（準備中） -->
+      <div class="map-card">
+        <div class="map-header">
+          <span class="map-title">所有分布マップ</span>
+          <span class="map-badge">準備中</span>
+        </div>
+        <div class="map-placeholder">
+          <div class="map-dots" aria-hidden="true">
+            <span v-for="i in 80" :key="i" class="map-dot" :style="{ opacity: Math.random() * 0.5 + 0.05 }" />
+          </div>
+          <div class="map-overlay-content">
+            <span class="map-icon">🗾</span>
+            <p class="map-coming-text">居住地を中心に所有者の分布を表示</p>
+            <p class="map-sub">市区町村単位でのヒートマップ・所有者数を可視化します</p>
+          </div>
+        </div>
       </div>
 
       <!-- 削除 -->
@@ -245,12 +271,41 @@ async function doDelete() {
 }
 
 .detail-main {
-  max-width: 520px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 12px 16px 80px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.detail-cols {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.col-left,
+.col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 700px) {
+  .detail-cols {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .col-left {
+    width: 200px;
+    flex-shrink: 0;
+  }
+  .col-right {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 .cover-card {
@@ -264,7 +319,7 @@ async function doDelete() {
 .cover-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 4;
   background: var(--bg-surface);
   border-radius: 6px;
   display: flex;
@@ -272,10 +327,12 @@ async function doDelete() {
   justify-content: center;
   overflow: hidden;
   cursor: pointer;
+  padding: 10px;
+  box-sizing: border-box;
 }
 .cover-wrap:hover .cover-camera-hint { opacity: 1; }
 
-.cover-img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.cover-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; }
 
 .cover-fallback {
   font-size: 14px;
@@ -612,6 +669,94 @@ async function doDelete() {
   color: #fff;
 }
 .confirm-delete:hover { opacity: 0.85; }
+
+/* 所有分布マップ */
+.map-card {
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-faint);
+}
+
+.map-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.map-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+}
+
+.map-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-faint);
+  background: var(--bg-surface);
+  padding: 2px 8px;
+  border-radius: 10px;
+  letter-spacing: 0.04em;
+}
+
+.map-placeholder {
+  position: relative;
+  height: 160px;
+  background: var(--bg-surface);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-dots {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 2px;
+  padding: 8px;
+}
+
+.map-dot {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.map-overlay-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 16px;
+}
+
+.map-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.4;
+}
+
+.map-coming-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-sub);
+  margin: 0 0 4px;
+}
+
+.map-sub {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin: 0;
+  line-height: 1.5;
+}
 
 .not-found {
   padding: 40px;

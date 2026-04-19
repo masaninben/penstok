@@ -304,8 +304,9 @@ async function save() {
 .cover-wrap {
   width: 100%; aspect-ratio: 3 / 4; background: var(--bg-surface);
   border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center;
+  padding: 10px; box-sizing: border-box;
 }
-.cover-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cover-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; }
 .cover-empty { font-size: 12px; color: var(--text-placeholder); }
 .curated-label { font-size: 11px; color: var(--accent); font-weight: 600; text-align: center; }
 
