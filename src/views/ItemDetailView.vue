@@ -280,7 +280,22 @@ async function doDelete() {
   gap: 12px;
 }
 
-.col-left,
+/* モバイル: 画像と情報を横並び */
+.col-left {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+}
+.col-left .cover-card {
+  width: 110px;
+  flex-shrink: 0;
+}
+.col-left .info-card {
+  flex: 1;
+  min-width: 0;
+}
+
 .col-right {
   display: flex;
   flex-direction: column;
@@ -296,6 +311,13 @@ async function doDelete() {
   .col-left {
     width: 200px;
     flex-shrink: 0;
+    flex-direction: column;
+  }
+  .col-left .cover-card {
+    width: auto;
+  }
+  .col-left .info-card {
+    flex: none;
   }
   .col-right {
     flex: 1;
