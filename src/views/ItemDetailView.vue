@@ -68,22 +68,22 @@
           </div>
         </div>
 
-        <!-- 右カラム: アシスト + アクション + メモ -->
+        <!-- 右カラム: マップ → 手放し → アシスト → メモ -->
         <div class="col-right">
-          <!-- 手放しアシスト（仮） -->
-          <div class="assist-card">
-            <div class="assist-header">
-              <span class="assist-icon">🔄</span>
-              <span class="assist-title">手放しアシスト</span>
-              <span class="assist-badge">準備中</span>
+          <!-- 所有分布マップ（準備中） -->
+          <div class="map-card">
+            <div class="map-header">
+              <span class="map-title">所有分布マップ</span>
+              <span class="map-badge">準備中</span>
             </div>
-            <p class="assist-desc">
-              捨て方・売り方・譲り方を、この商品とあなたの居住地に合わせて案内します。
-            </p>
-            <div class="assist-chips">
-              <span class="assist-chip">自治体の廃棄方法</span>
-              <span class="assist-chip">再販価格相場</span>
-              <span class="assist-chip">寄付・リユース先</span>
+            <div class="map-placeholder">
+              <div class="map-dots" aria-hidden="true">
+                <span v-for="i in 80" :key="i" class="map-dot" :style="{ opacity: Math.random() * 0.5 + 0.05 }" />
+              </div>
+              <div class="map-overlay-content">
+                <span class="map-icon">🗾</span>
+                <p class="map-coming-text">居住地を中心に所有者の分布を表示</p>
+              </div>
             </div>
           </div>
 
@@ -111,34 +111,34 @@
             </template>
           </div>
 
-          <!-- 所有分布マップ（準備中） -->
-          <div class="map-card">
-            <div class="map-header">
-              <span class="map-title">所有分布マップ</span>
-              <span class="map-badge">準備中</span>
+          <!-- 手放しアシスト -->
+          <div class="assist-card">
+            <div class="assist-header">
+              <span class="assist-icon">🔄</span>
+              <span class="assist-title">手放しアシスト</span>
+              <span class="assist-badge">準備中</span>
             </div>
-            <div class="map-placeholder">
-              <div class="map-dots" aria-hidden="true">
-                <span v-for="i in 80" :key="i" class="map-dot" :style="{ opacity: Math.random() * 0.5 + 0.05 }" />
-              </div>
-              <div class="map-overlay-content">
-                <span class="map-icon">🗾</span>
-                <p class="map-coming-text">居住地を中心に所有者の分布を表示</p>
-              </div>
+            <p class="assist-desc">
+              捨て方・売り方・譲り方を、この商品とあなたの居住地に合わせて案内します。
+            </p>
+            <div class="assist-chips">
+              <span class="assist-chip">自治体の廃棄方法</span>
+              <span class="assist-chip">再販価格相場</span>
+              <span class="assist-chip">寄付・リユース先</span>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- メモ -->
-      <div class="memo-card">
-        <p class="section-label">メモ</p>
-        <textarea
-          class="memo-input"
-          placeholder="メモを追加…"
-          :value="item.notes ?? ''"
-          @input="store.updateNotes(item.id, ($event.target as HTMLTextAreaElement).value)"
-        />
+          <!-- メモ -->
+          <div class="memo-card">
+            <p class="section-label">メモ</p>
+            <textarea
+              class="memo-input"
+              placeholder="メモを追加…"
+              :value="item.notes ?? ''"
+              @input="store.updateNotes(item.id, ($event.target as HTMLTextAreaElement).value)"
+            />
+          </div>
+        </div>
       </div>
 
       <!-- 削除 -->
