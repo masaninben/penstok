@@ -1,13 +1,30 @@
 # Penstok
 
-Next.js 14 + Supabase + TailwindCSS で構築した Web アプリケーション。
+**手放す、を設計する。**
+
+所有物の記録・管理と、手放し方の意思決定を支援する Web アプリケーション。本・音楽・映像・ゲーム・家電・カメラなど物理的な所有物を対象とする。
+
+## 主な機能
+
+- **棚管理**: カテゴリ別にアイテムを登録・検索・一覧表示
+- **手放し記録**: 再販売 / 譲渡 / 寄付 / リサイクル / 廃棄 の5種類を記録
+- **手放しアシスト**: フリマ・買取サービスへのリンク、廃棄情報、Penstokユーザーの手放し傾向を表示
+- **所有分布マップ**: 同じ商品の所有者が日本のどこにいるかを地図で可視化
+- **Penstokスコア**: 活動量・継続性・循環貢献・データ貢献の4軸でスコアリング
+- **商品データベース**: バーコードスキャン・外部API（Google Books / 楽天）による自動登録
+- **カスタム画像**: 撮影・白背景合成・背景除去に対応
 
 ## 技術スタック
 
-- **Next.js 14** (App Router)
-- **Supabase** (認証・DB)
-- **TailwindCSS**
-- **TypeScript**
+| 領域 | 技術 |
+|---|---|
+| フレームワーク | Vue 3 (Composition API) + TypeScript |
+| ビルド | Vite |
+| バックエンド | Firebase (Authentication / Firestore / Hosting) |
+| 画像ストレージ | Cloudinary |
+| 地図 | Leaflet |
+| バーコード | @zxing/browser |
+| 背景除去 | @imgly/background-removal |
 
 ## セットアップ
 
@@ -19,26 +36,36 @@ npm install
 
 ### 2. 環境変数の設定
 
-`.env.example` を `.env.local` にコピーして値を設定する。
-
-```bash
-cp .env.example .env.local
-```
+`.env.local` を作成して以下を設定する。
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+# Firebase
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+
+# Cloudinary
+VITE_CLOUDINARY_CLOUD_NAME=
+VITE_CLOUDINARY_UPLOAD_PRESET=
+
+# 外部API（任意）
+VITE_RAKUTEN_APP_ID=
 ```
 
-### 3. Supabase の設定
+### 3. Firebase の設定
 
-1. [Supabase](https://supabase.com) でプロジェクトを作成する
-2. Authentication > Providers で **Google** を有効化する
-3. Google Cloud Console で OAuth 2.0 クライアントを作成し、以下を設定する
-   - 承認済みリダイレクト URI: `https://<your-project>.supabase.co/auth/v1/callback`
-4. Supabase の Authentication > URL Configuration で以下を設定する
-   - Site URL: `http://localhost:3000`（開発環境）
-   - Redirect URLs: `http://localhost:3000/auth/callback`
+1. [Firebase Console](https://console.firebase.google.com) でプロジェクトを作成
+2. Authentication で **Google** ログインを有効化
+3. Firestore Database を作成しセキュリティルールを設定
+4. Firebase CLI でプロジェクトをリンク
+
+```bash
+firebase login
+firebase use <project-id>
+```
 
 ### 4. 開発サーバーの起動
 
@@ -46,27 +73,45 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 npm run dev
 ```
 
-[http://localhost:3000](http://localhost:3000) でアクセスできる。
+### 5. デプロイ
+
+```bash
+npm run build
+firebase deploy --only hosting
+```
 
 ## ディレクトリ構成
 
 ```
 src/
-├── app/
-│   ├── auth/
-│   │   └── callback/
-│   │       └── route.ts      # OAuth コールバック処理
-│   ├── login/
-│   │   ├── page.tsx          # ログインページ
-│   │   └── LoginForm.tsx     # Google ログインボタン
-│   ├── layout.tsx
-│   └── page.tsx              # ホームページ（要認証）
 ├── components/
-│   └── LogoutButton.tsx      # ログアウトボタン
+│   ├── AccountModal.vue      # マイページ・スコア表示
+│   ├── BarcodeScanner.vue    # バーコードスキャナー
+│   ├── DisposalAssist.vue    # 手放しアシスト
+│   ├── GlobalToolbar.vue     # グローバルナビ
+│   ├── OwnershipMap.vue      # 所有分布マップ
+│   ├── PhotoUpload.vue       # 画像撮影・白背景合成・背景除去
+│   └── ShelfCard.vue         # 棚カード
 ├── lib/
-│   └── supabase/
-│       ├── client.ts         # ブラウザ用 Supabase クライアント
-│       ├── server.ts         # サーバー用 Supabase クライアント
-│       └── middleware.ts     # セッション更新処理
-└── middleware.ts              # ルート保護ミドルウェア
+│   ├── firebase.ts           # Firebase 初期化
+│   └── auth.ts               # 認証ユーティリティ
+├── router/                   # Vue Router 設定
+├── store/
+│   ├── shelf.ts              # 棚アイテム管理
+│   ├── products.ts           # 商品DBキャッシュ
+│   └── userProfile.ts        # ユーザープロフィール
+├── types/
+│   └── index.ts              # 型定義
+├── views/
+│   ├── ShelfView.vue         # 棚一覧
+│   ├── AddItemView.vue       # アイテム追加
+│   ├── ItemDetailView.vue    # アイテム詳細・手放し
+│   ├── LoginView.vue         # ログイン
+│   ├── AboutView.vue         # サービス紹介
+│   └── admin/               # 管理画面
+└── App.vue                   # ルートコンポーネント・テーマ管理
 ```
+
+## ライセンス
+
+Private
