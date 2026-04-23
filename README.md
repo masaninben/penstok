@@ -8,7 +8,9 @@
 
 ## スクリーンショット
 
-![shelf](./screenshot.png)
+棚画面（所有物一覧）
+
+![Penstok](./screenshot.png)
 
 ## 主な機能
 
