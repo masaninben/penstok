@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/nakamuramasahiro/Desktop/penstok/.claude/sync-worktree.sh",
+            "timeout": 30,
+            "statusMessage": "worktreeをmainへ同期中…"
+          }
+        ]
+      }
+    ]
+  }
+}
